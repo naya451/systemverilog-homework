@@ -29,4 +29,20 @@ module xor_gate_using_mux
   // constants 0 and 1, and wire connections
 
 
+  wire conn;
+
+  mux loc1 (
+    .d0(b),
+    .d1(~b),
+    .sel(a),
+    .y(conn)
+  );
+
+    mux loc2 (
+    .d0(1'b0),
+    .d1(1'b1),
+    .sel(conn),
+    .y(o)
+  );
+
 endmodule
