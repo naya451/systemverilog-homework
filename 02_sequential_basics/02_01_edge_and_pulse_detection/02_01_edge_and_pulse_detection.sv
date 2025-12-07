@@ -33,4 +33,39 @@ module one_cycle_pulse_detector (input clk, rst, a, output detected);
   // See the testbench for the output format ($display task).
 
 
+  typedef enum bit [1:0]
+    {
+        S0 = 2'd0,
+        S1 = 2'd1,
+        S2 = 2'd2
+    }
+    state_e;
+
+  logic a_r;
+  state_e state, next_state;
+  always_ff @ (posedge clk or posedge rst)
+    if (rst)
+        state <= S0;
+    else 
+        state <= next_state;
+
+
+  assign a_r = a;
+
+  always_comb
+  begin
+      next_state = state;
+      case (state)
+      S0: if (~ a_r) next_state = S1;
+          else       next_state = S0;
+      S1: if (  a_r) next_state = S2;
+          else       next_state = S1;
+      S2: next_state = S0;
+
+      endcase
+  end
+
+  assign detected = (state == S2 && ~a_r);
+
+
 endmodule

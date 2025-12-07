@@ -27,5 +27,23 @@ module serial_to_parallel
     // Note:
     // Check the waveform diagram in the README for better understanding.
 
+    logic [width - 1:0]arr;
+    assign parallel_data = parallel_valid ? arr : '0;
+    always_ff @ (posedge clk)
+    if (rst)
+    begin
+      prev = 2'b00;
+      res  = 2'b00;
+    end
+    else if (width)
+    begin
+        res = (~prev) ;
+        prev = (requests == 2'b11) ? res : 2'b01;
+    end
+    else 
+    begin
+        parallel_valid <= 1;
+    end
+
 
 endmodule

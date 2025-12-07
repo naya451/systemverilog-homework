@@ -23,5 +23,23 @@ module round_robin_arbiter_with_2_requests
     // requests -> 01 00 10 11 11 00 11 00 11 11
     // grants   -> 01 00 10 01 10 00 01 00 10 01
 
+  logic [1:0]prev;
+  logic [1:0]res;
+
+  assign grants = (requests == 2'b11) ? res : requests;
+
+  always_ff @ (posedge clk)
+    if (rst)
+    begin
+      prev = 2'b00;
+      res  = 2'b00;
+    end
+    else
+    begin
+        res = (~prev) ;
+        prev = (requests == 2'b11) ? res : 2'b01;
+    end
+    
+
 
 endmodule
