@@ -25,5 +25,27 @@ module double_tokens
     // a -> 10010011000110100001100100
     // b -> 11011011110111111001111110
 
+    logic [400:0]tmp;
+    bit res;
+    assign b = res;
+    assign overflow = tmp[400];
 
+
+    always_ff @ (posedge clk)
+    if (rst)
+    begin
+        tmp <= 401'b0;
+    end
+    else
+    begin
+        if (a)
+        begin
+            tmp <= {tmp[399:0], 1'b1};
+            res <= '1;
+        end
+        else
+        begin
+            {tmp, res} <= {tmp[400], 1'b0, tmp[399:0]};
+        end
+    end
 endmodule
